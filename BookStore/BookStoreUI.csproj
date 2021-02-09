@@ -12,6 +12,11 @@
 		<ProjectReference Include="..\Infrastructure\Infrastructure.csproj" />
 	</ItemGroup>
 	<ItemGroup>
-		<Folder Include="EmailTemplate\" />
+		<Folder Include="wwwroot\EmailTemplate\" />
+	</ItemGroup>
+	<ItemGroup>
+	  <None Include="wwwroot\EmailTemplate\EmailBookApproved.html" />
+	  <None Include="wwwroot\EmailTemplate\EmailConfirm.html" />
+	  <None Include="wwwroot\EmailTemplate\ForgotPassword.html" />
 	</ItemGroup>
 </Project>

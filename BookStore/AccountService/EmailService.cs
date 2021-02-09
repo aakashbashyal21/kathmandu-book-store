@@ -1,6 +1,8 @@
 ﻿using BookStore.Application.Common.Interfaces;
 using BookStore.Application.Common.Model;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -15,6 +17,8 @@ namespace BookStoreUI.AccountService
 {
     public class EmailService : IEmailService
     {
+        private IWebHostEnvironment _env;
+
         private const string templatePath = @"EmailTemplate/{0}.html";
         private readonly SMTPConfigModel _smtpConfig;
 
@@ -46,8 +50,10 @@ namespace BookStoreUI.AccountService
             await SendEmail(userEmailOptions);
         }
 
-        public EmailService(IOptions<SMTPConfigModel> smtpConfig)
+        public EmailService(IWebHostEnvironment env,
+            IOptions<SMTPConfigModel> smtpConfig)
         {
+            _env = env;
             _smtpConfig = smtpConfig.Value;
         }
 
@@ -84,7 +90,8 @@ namespace BookStoreUI.AccountService
 
         private string GetEmailBody(string templateName)
         {
-            string body = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, string.Format(templatePath, templateName)));
+            string body = File.ReadAllText(Path.Combine(_env.WebRootPath, string.Format(templatePath, templateName)));
+
             return body;
         }
 
