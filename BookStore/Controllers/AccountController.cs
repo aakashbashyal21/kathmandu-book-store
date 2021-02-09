@@ -212,7 +212,7 @@ namespace BookStoreUI.Controllers
             return View();
         }
 
-        [AllowAnonymous, HttpPost("fotgot-password")]
+        [AllowAnonymous, HttpPost("forgot-password")]
         public async Task<IActionResult> ForgotPassword(ForgotPasswordModel model)
         {
             if (ModelState.IsValid)
