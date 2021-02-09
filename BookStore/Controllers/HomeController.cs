@@ -45,7 +45,7 @@ namespace BookStore.Controllers
                 IsBodyHtml = true
             };
 
-            mail.To.Add("aakashbashyal");
+            mail.To.Add("aakashbashyal@gmail.com");
 
 
             NetworkCredential networkCredential = new NetworkCredential("devawsapp@gmail.com", "Admin@123");
