@@ -1,6 +1,7 @@
 ﻿using BookStore.Application.Common.Interfaces;
 using BookStore.Models;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using System;
@@ -16,10 +17,14 @@ namespace BookStore.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IWebHostEnvironment _env;
         private readonly ILogger<HomeController> _logger;
         private readonly IBookService _bookService;
-        public HomeController(ILogger<HomeController> logger, IBookService bookService)
+        public HomeController(ILogger<HomeController> logger,
+            IWebHostEnvironment env,
+            IBookService bookService)
         {
+            _env = env;
             _logger = logger;
             _bookService = bookService;
         }
@@ -33,6 +38,17 @@ namespace BookStore.Controllers
             return View(allBooks);
 
         }
+
+        [Authorize, HttpGet("environment")]
+
+        public ActionResult Environment()
+        {
+            string environment = _env.EnvironmentName;
+
+
+            return View(environment);
+        }
+
         [Authorize, HttpGet("send-test-email")]
 
         public async Task<IActionResult> Privacy()
@@ -40,7 +56,7 @@ namespace BookStore.Controllers
             MailMessage mail = new MailMessage
             {
                 Subject = "Hi",
-                Body = "This is the email body",
+                Body = $"This is the email body from {_env.EnvironmentName}",
                 From = new MailAddress("devawsapp@gmail.com", "BookStoreTeam"),
                 IsBodyHtml = true
             };
@@ -48,7 +64,7 @@ namespace BookStore.Controllers
             mail.To.Add("aakashbashyal@gmail.com");
 
 
-            NetworkCredential networkCredential = new NetworkCredential("devawsapp@gmail.com", "Admin@123");
+            NetworkCredential networkCredential = new NetworkCredential("devawsapp@gmail.com", @"Nirv@n@H0use123");
 
             SmtpClient smtpClient = new SmtpClient
             {
