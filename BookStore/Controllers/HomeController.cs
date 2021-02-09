@@ -55,7 +55,6 @@ namespace BookStore.Controllers
                 Host = "smtp.gmail.com",
                 Port = 587,
                 EnableSsl = true,
-                UseDefaultCredentials = false,
                 Credentials = networkCredential
             };
 
