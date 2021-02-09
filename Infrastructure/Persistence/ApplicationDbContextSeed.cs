@@ -63,7 +63,7 @@ namespace Infrastructure.Persistence
                         "first published in book form in 1878. Many writers consider Anna Karenina the " +
                         "greatest work of literature ever, and Tolstoy himself called it his first true novel",
 
-                        CoverImageUrl = "books/cover/930eabb0-64a8-4425-bbf2-555053f087ea_Tolstoy_-_War_and_Peace_-_first_edition,_1869.jpg",
+                        CoverImageUrl = "books/cover/4029194d-f747-4d71-bf62-768298e7a1e8_Tolstoy_-_War_and_Peace_-_first_edition,_1869.jpg",
 
                         CreatedBy = "b2c3196c-fbe7-473d-9a0f-b491f2918a6c",
                         Created = DateTime.UtcNow
