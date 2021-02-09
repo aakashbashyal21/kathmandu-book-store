@@ -41,7 +41,7 @@ namespace BookStore.Controllers
 
         [Authorize, HttpGet("environment")]
 
-        public ActionResult Environment()
+        public ActionResult EnvView()
         {
             string environment = _env.EnvironmentName;
 
