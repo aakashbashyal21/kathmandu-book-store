@@ -1,0 +1,36 @@
+﻿@model BookStoreUI.Models.AlertViewModel
+@{
+    Layout = null;
+    string alertClass = string.Empty;
+    string title = string.Empty;
+    switch (Model.Type)
+    {
+        case BookStoreUI.Models.AlertType.Information:
+            alertClass = "alert-success";
+            title = "Success";
+            break;
+        case BookStoreUI.Models.AlertType.Error:
+            alertClass = "alert-danger";
+            title = "Error";
+            break;
+        case BookStoreUI.Models.AlertType.Warning:
+            alertClass = "alert-warning";
+            title = "Warning";
+            break;
+    }
+
+}
+
+<div class="alert @alertClass alert-dismissible" role="alert" style="display:block">
+    <strong>@title !! </strong> @Model.Message
+    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+    </button>
+</div>
+
+
+<script>
+    $('.close').click(function () {
+        $('.alert').hide();
+    });
+</script>

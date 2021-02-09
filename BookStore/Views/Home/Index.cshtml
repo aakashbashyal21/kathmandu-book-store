@@ -1,0 +1,41 @@
+﻿@{
+    ViewData["Title"] = "All books";
+}
+@model BookStore.Application.Common.Model.PaginatedList<BookListViewModel>
+
+
+<div class="container">
+    <h4 class="display-4">Recent Books</h4>
+    <div class="row">
+
+        @foreach (var book in Model.Items)
+        {
+            <div class="col-md-4">
+                <partial name="_bookThumbnail" model="@book" />
+            </div>
+        }
+
+    </div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination justify-content-end">
+            <li class='page-item @(Model.HasPreviousPage ? " " : " disabled" )'>
+                <a asp-route-currentPage="@(Model.PageIndex -1)"
+                   class="page-link" aria-label="Next">
+                    <span aria-hidden="true">Previous</span>
+                </a>
+            </li>
+            @for (var i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class='page-item @(i == Model.PageIndex ? "active" : "" )'>
+                    <a asp-route-currentPage="@i" class="page-link">@i</a>
+                </li>
+            }
+            <li class='page-item @(Model.HasNextPage ? " " : " disabled" )'>
+                <a asp-route-currentpage="@(Model.PageIndex + 1)"
+                   class="page-link" aria-label="Previous">
+                    <span aria-hidden="true">Next</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

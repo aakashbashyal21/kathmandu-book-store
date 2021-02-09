@@ -1,0 +1,52 @@
+﻿@{
+    ViewData["Title"] = "Book detail " + Model.Title;
+}
+@model BookEditViewModel
+
+
+<div class="container">
+    <h3 class="display-4">Book details</h3>
+    <div class="row">
+        <div class="col-md-6">
+            <img class="d-block w-75 h-100" src="@Url.Content("/" + @Model.ExistingImageUrl)" alt="@Model.Title">
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="col-md-12">
+                    <h1>@Model.Title</h1>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12 text-primary">
+                    <span class="label label-primary">By: </span>
+                    <span class="monospaced">@Model.Author</span>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="description">
+                        @Model.Description
+                    </p>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <a asp-action="BorrowRequest" asp-controller="Book" asp-route-bookId="@Model.Id" class="btn btn-primary">
+                        Request for Borrow
+                    </a>
+                </div>
+            </div>
+
+            <hr />
+
+            <ul class="list-group">
+                <li class="list-group-item"><span class="font-weight-bold">Category - </span> @Model.Genre</li>
+                <li class="list-group-item"><span class="font-weight-bold">Total pages - </span> @Model.TotalPages</li>
+                <li class="list-group-item"><span class="font-weight-bold">Language - </span> @Model.Language</li>
+            </ul>
+        </div>
+    </div>
+</div>
