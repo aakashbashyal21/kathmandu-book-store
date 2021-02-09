@@ -84,7 +84,7 @@ namespace BookStoreUI.AccountService
 
         private string GetEmailBody(string templateName)
         {
-            var body = File.ReadAllText(string.Format(templatePath, templateName));
+            string body = File.ReadAllText(Path.Combine(Environment.CurrentDirectory, string.Format(templatePath, templateName)));
             return body;
         }
 
