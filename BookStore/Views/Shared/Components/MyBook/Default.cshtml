@@ -18,7 +18,8 @@
                 <tr>
                     <th scope="col">Author</th>
                     <td>Title</td>
-                    <td>Issue Date</td>
+                    <td>Status</td>
+                    <td>Request Date</td>
                 </tr>
             </thead>
             <tbody>
@@ -30,6 +31,7 @@
                         <tr>
                             <th scope="row">@item.Author</th>
                             <td>@item.Title</td>
+                            <td>@item.Status</td>
                             <td>@item.IssueDate.Date.ToShortDateString()</td>
                         </tr>
                     }
