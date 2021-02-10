@@ -1,10 +1,16 @@
-﻿@{
-    ViewData["Title"] = "All books";
-}
-@model BookStore.Application.Common.Model.PaginatedList<BookApproveListViewModel>
+﻿@model BookStore.Application.Common.Model.PaginatedList<BookApproveListViewModel>
 
+<style>
+    .expire {
+        background-color: red
+    }
+</style>
 
-
+<style>
+    .expire {
+        background-color: red
+    }
+</style>
 
 <div class="card">
     <div class="card-header bg-success text-white">
@@ -16,62 +22,38 @@
                 <tr>
                     <th scope="col">Author</th>
                     <td>Title</td>
-                    <td>Issue Date</td>
                     <td>Expire Date</td>
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Items)
+                @if (Model.Items.Count > 0)
                 {
-                    <tr>
-                        <th scope="row">@item.Author</th>
-                        <td>@item.Title</td>
-                        <td>@item.IssueDate.Date.ToShortDateString()</td>
-                        <td>@item.DueDate.Date.ToShortDateString()</td>
-                    </tr>
+                    @foreach (var item in Model.Items)
+                    {
+                        var isExpire = "no-expire";
 
+                        if (item.DueDate < DateTime.Now)
+                        {
+                            isExpire = "expire text-white";
+                        }
+                        <tr class="@isExpire">
+                            <th scope="row">@item.Author</th>
+                            <td>@item.Title</td>
+                            <td>@item.DueDate.Date.ToShortDateString()</td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr class="no-data">
+                        <td colspan="3"> No Records To Display</td>
+                    </tr>
                 }
             </tbody>
 
         </table>
     </div>
-    <div class="card-footer text-muted">
-        <nav aria-label="Page navigation example">
-            <ul class="pagination justify-content-end">
-                <li class='page-item @(Model.HasPreviousPage ? " " : " disabled" )'>
-                    <a href="javascript:void(0);" onClick="return pageChange(@(Model.PageIndex - 1));"
-                       class="page-link" aria-label="Next">
-                        <span aria-hidden="true">Previous</span>
-                    </a>
-                </li>
-                @for (var i = 1; i <= Model.TotalPages; i++)
-                {
-                    <li class='page-item @(i == Model.PageIndex ? " active" : "" )'>
-                        <a href="javascript:void(0);" onClick="return pageChange(@i);" class="page-link">@i</a>
-                    </li>
-                }
-                <li class='page-item @(Model.HasNextPage ? " " : " disabled" )'>
-                    <a href="javascript:void(0);" onClick="return pageChange(@(Model.PageIndex + 1));"
-                       class="page-link" aria-label="Previous">
-                        <span aria-hidden="true">Next</span>
-                    </a>
-                </li>
-            </ul>
-        </nav>
-    </div>
+
 </div>
 
 
-<script>
-
-    function pageChange(id) {
-        var container = $("#ApprovedBookList");
-
-
-
-        $.get("/mybook/approvedbook", { currentpage: id }, function (res) {
-            container.html(res);
-        });
-    }
-
-</script>

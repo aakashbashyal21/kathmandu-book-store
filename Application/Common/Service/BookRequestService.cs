@@ -41,17 +41,17 @@ namespace BookStore.Application.Common.Service
         public async Task<PaginatedList<BookRequestViewModel>> GetRequestedBookList(int pageNumber, int pageSize)
         {
             var bookReservationList = await _dbContext.BookReservations
-                    .Include(x => x.Book).Where(x => x.Status == Domain.BorrowStatus.Requested).Select(
-                    book => new BookRequestViewModel
-                    {
-                        Id = book.Id,
-                        BookId = book.Book.Id,
-                        RequesterId = book.RequesterId,
-                        Author = book.Book.Author,
-                        Title = book.Book.Title,
-                        Status = book.Status,
-                        RequestDate = book.RequestDate
-                    }).PaginatedListAsync(pageNumber, pageSize);
+                               .Include(x => x.Book).Where(x => x.Status == Domain.BorrowStatus.Requested).Select(
+                               book => new BookRequestViewModel
+                               {
+                                   Id = book.Id,
+                                   BookId = book.Book.Id,
+                                   RequesterId = book.RequesterId,
+                                   Author = book.Book.Author,
+                                   Title = book.Book.Title,
+                                   Status = book.Status,
+                                   RequestDate = book.RequestDate
+                               }).PaginatedListAsync(pageNumber, pageSize);
 
             foreach (var y in bookReservationList.Items)
             {
@@ -81,7 +81,9 @@ namespace BookStore.Application.Common.Service
                 await SendEmailForApprove(model);
             }
             else if (GetBorrowStatus(model.Status) == Domain.BorrowStatus.Rejected)
+            {
                 await SendBookNotApproveEmail(model);
+            }
 
 
             await ModifyBookRequest(model.RequestId, model.Status);
@@ -90,20 +92,20 @@ namespace BookStore.Application.Common.Service
         {
             var dict = new Dictionary<string, BorrowStatus> {
                 { "Reject", BorrowStatus.Rejected },
+                { "Return", BorrowStatus.Returned },
                 { "Approve", BorrowStatus.Approved }
              };
             return dict[status];
         }
-
         public async Task ModifyBookRequest(int requestId, string status)
         {
-
-
             var bookReservation = await _dbContext.BookReservations.Where(r => r.Id == requestId).FirstOrDefaultAsync();
             bookReservation.Status = GetBorrowStatus(status);
 
             await _dbContext.SaveChangesAsync();
         }
+
+
 
         public async Task SendEmailForApprove(BookApproveViewModel model)
         {
@@ -170,6 +172,29 @@ namespace BookStore.Application.Common.Service
 
             return bookApproveList;
         }
+        public async Task<PaginatedList<BookApproveListViewModel>> GetAllBookForUser(int currentpage, int pageSize)
+        {
+            var bookApproveList = await _dbContext.BookReservations
+                              .Include(x => x.Book).Select(reserve => new BookApproveListViewModel
+                              {
+                                  RequesterId = reserve.RequesterId,
+                                  Author = reserve.Book.Author,
+                                  Title = reserve.Book.Title,
+                                  IssueDate = reserve.RequestDate,
+                                  Status = reserve.Status.ToString()
+                              }).ToListAsync();
+
+            foreach (var y in bookApproveList)
+            {
+                y.Borrower = await _identityService.GetUserEmailAsync(y.RequesterId);
+            }
+
+            var result = bookApproveList
+                .Where(x => x.RequesterId.Equals(_currentUserService.UserId))
+                .PageList(currentpage, pageSize);
+
+            return result;
+        }
         public async Task<PaginatedList<BookApproveListViewModel>> GetApprovedBookForUser(int currentpage, int pageSize)
         {
             var bookApproveList = await _dbContext.BookLendings
@@ -194,6 +219,16 @@ namespace BookStore.Application.Common.Service
                 .PageList(currentpage, pageSize);
 
             return result;
+        }
+
+        public async Task ReturnBook(BookReturnViewModel model)
+        {
+            var bookReservation = await _dbContext.BookReservations
+                                            .Where(r => r.BookId == model.BookId && r.RequesterId.Equals(model.BorrowerId))
+                                            .FirstOrDefaultAsync();
+
+            await ModifyBookRequest(bookReservation.Id, model.Status);
+
         }
     }
 }

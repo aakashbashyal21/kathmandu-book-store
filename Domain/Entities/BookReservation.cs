@@ -12,6 +12,7 @@ namespace Domain.Entities
         public BorrowStatus Status { get; set; }
         public int BookId { get; set; }
         public string RequesterId { get; set; }
+        public string Remarks { get; set; }
         public Book Book { get; set; }
     }
 }

@@ -3,13 +3,13 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.30907.101
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BookStoreUI", "BookStore\BookStoreUI.csproj", "{3C14466A-F749-4F28-96ED-E5D40A9F3ADE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BookStoreUI", "BookStore\BookStoreUI.csproj", "{3C14466A-F749-4F28-96ED-E5D40A9F3ADE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{A1F3E837-69B0-48D2-A17D-772F5A7E6D31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Domain", "Domain\Domain.csproj", "{A1F3E837-69B0-48D2-A17D-772F5A7E6D31}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Application", "Application\Application.csproj", "{1A3D950A-EC92-4303-8BDA-CBB53B871718}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Application", "Application\Application.csproj", "{1A3D950A-EC92-4303-8BDA-CBB53B871718}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{D639B65A-12B2-4EE3-8840-ABDEF442D1D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{D639B65A-12B2-4EE3-8840-ABDEF442D1D8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

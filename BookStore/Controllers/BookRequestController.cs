@@ -60,7 +60,7 @@ namespace BookStoreUI.Controllers
                 await _bookRequestService.ApproveBook(model);
                 TempData["Alert"] = JsonConvert.SerializeObject(new AlertViewModel(AlertMessage.ApproveBookRequest, AlertType.Information));
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 TempData["Alert"] = JsonConvert.SerializeObject(new AlertViewModel(AlertMessage.Error, AlertType.Error));
             }
@@ -68,6 +68,22 @@ namespace BookStoreUI.Controllers
             return RedirectToAction("Index");
         }
 
+        [HttpPost]
+        [Authorize(Roles = "Administrator")]
+        public async Task<IActionResult> ReturnBook(BookReturnViewModel model)
+        {
+            try
+            {
+                await _bookRequestService.ReturnBook(model);
+                TempData["Alert"] = JsonConvert.SerializeObject(new AlertViewModel(AlertMessage.ApproveBookRequest, AlertType.Information));
+            }
+            catch (Exception ex)
+            {
+                TempData["Alert"] = JsonConvert.SerializeObject(new AlertViewModel(AlertMessage.Error, AlertType.Error));
+            }
+
+            return RedirectToAction("Index");
+        }
 
     }
 }

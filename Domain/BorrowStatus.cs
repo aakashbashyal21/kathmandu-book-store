@@ -6,10 +6,11 @@ namespace BookStore.Domain
 {
     public enum BorrowStatus
     {
-        
+
         Approved = 0,
         Requested = 1,
         Verified = 2,
-        Rejected = 3
+        Rejected = 3,
+        Returned = 4
     }
 }

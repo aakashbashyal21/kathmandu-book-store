@@ -23,23 +23,33 @@
                 </tr>
             </thead>
             <tbody>
-                @foreach (var item in Model.Items)
+                @if (Model.Items.Count > 0)
                 {
-                    <tr>
-                        <th scope="row">@item.Author</th>
-                        <td>@item.Title</td>
-                        <td>@item.BookCount</td>
-                        <td>@item.Genre</td>
-                        <td>
-                            <div>
-                                <a asp-controller="Book" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-secondary m-1">Edit</a>
-                                <button type="button" class="btn btn-danger btn-sm" data-item-id="@item.Id" data-item-description="@item.Title" data-toggle="modal" data-target="#confirm-delete">Delete</button>
-                            </div>
-                        </td>
-                    </tr>
+                    @foreach (var item in Model.Items)
+                    {
+                        <tr>
+                            <th scope="row">@item.Author</th>
+                            <td>@item.Title</td>
+                            <td>@item.BookCount</td>
+                            <td>@item.Genre</td>
+                            <td>
+                                <div>
+                                    <a asp-controller="Book" asp-action="Edit" asp-route-id="@item.Id" class="btn btn-sm btn-secondary m-1">Edit</a>
+                                    <button type="button" class="btn btn-danger btn-sm" data-item-id="@item.Id" data-item-description="@item.Title" data-toggle="modal" data-target="#confirm-delete">Delete</button>
+                                </div>
+                            </td>
+                        </tr>
 
+                    }
+                }
+                else
+                {
+                    <tr class="no-data">
+                        <td colspan="6"> No Records To Display</td>
+                    </tr>
                 }
             </tbody>
+
         </table>
     </div>
     <nav aria-label="Page navigation example">
@@ -102,6 +112,8 @@
             var modal = $(this);
             debugger;
             modal.find('.modal-content input').val(data.itemId);
+            $("#confirm-delete").modal('hide');
+
         });
     </script>
 }

@@ -7,13 +7,13 @@ using System.Threading.Tasks;
 
 namespace BookStoreUI.ViewComponents
 {
-    public class ApprovedBookViewComponent : ViewComponent
+    public class MyBookViewComponent : ViewComponent
     {
         private readonly ICurrentUserService _currentUserService;
 
         private readonly IBookRequestService _bookRequestService;
 
-        public ApprovedBookViewComponent(IBookRequestService bookRequestService,
+        public MyBookViewComponent(IBookRequestService bookRequestService,
             ICurrentUserService currentUserService)
         {
             _currentUserService = currentUserService;
@@ -24,12 +24,9 @@ namespace BookStoreUI.ViewComponents
         {
             int pageSize = 10;
 
-            var approvedBook = await _bookRequestService.GetApprovedBookForUser(currentPage, pageSize);
+            var result = await _bookRequestService.GetAllBookForUser(currentPage, pageSize);
 
-
-
-
-            return View(approvedBook);
+            return View(result);
         }
     }
 }

@@ -1,8 +1,11 @@
 ﻿@addTagHelper *, BookStoreUI
 
-<div id="ApprovedBookList">
-    <vc:approved-book current-page="1">
-    </vc:approved-book>
+@{
+    ViewData["Title"] = "My Book";
+}
+<div id="MyBookList">
+    <vc:my-book current-page="1">
+    </vc:my-book>
 </div>
 
 
