@@ -20,5 +20,6 @@ namespace BookStore.Application.Common.Interfaces
         Task RequestForBorrow(int bookId, string userId);
 
         Task<bool> CheckIfBorrowed(int bookId, string userId);
+
     }
 }

@@ -125,7 +125,7 @@ namespace BookStore.Application.Common.Service
         {
 
             if (await _dbContext.BookReservations
-                .AnyAsync(x => x.BookId == bookId && x.RequesterId.Equals(userId))) return true;
+                .AnyAsync(x => x.BookId == bookId && x.RequesterId.Equals(userId) && x.Status != Domain.BorrowStatus.Approved)) return true;
 
             else return false;
         }

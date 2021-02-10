@@ -15,5 +15,7 @@ namespace BookStore.Application.Common.Interfaces
         Task SendEmailForForgotPassword(UserEmailOptions userEmailOptions);
 
         Task SendEmailForBookApproved(UserEmailOptions userEmailOptions);
+        Task SendEmailForBookNotApproved(UserEmailOptions userEmailOptions);
+
     }
 }

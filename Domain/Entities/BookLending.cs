@@ -1,4 +1,5 @@
 using BookStore.Domain.Common;
+using BookStore.Domain.Entities;
 using System;
 
 namespace Domain.Entities
@@ -10,6 +11,7 @@ namespace Domain.Entities
         public string Remarks { get; set; }
         public DateTime IssuedDate { get; set; }
         public int BookId { get; set; }
+        public Book Book { get; set; }
         public string BorrowerId { get; set; }
     }
 }

@@ -2,6 +2,7 @@
 using BookStore.Application.Common.Mappings;
 using BookStore.Application.Common.Model;
 using BookStore.Application.ViewModel;
+using BookStore.Domain;
 using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
@@ -15,6 +16,7 @@ namespace BookStore.Application.Common.Service
 {
     public class BookRequestService : IBookRequestService
     {
+
         private readonly IConfiguration _configuration;
 
         private IEmailService _emailService;
@@ -39,7 +41,7 @@ namespace BookStore.Application.Common.Service
         public async Task<PaginatedList<BookRequestViewModel>> GetRequestedBookList(int pageNumber, int pageSize)
         {
             var bookReservationList = await _dbContext.BookReservations
-                    .Include(x => x.Book).Select(
+                    .Include(x => x.Book).Where(x => x.Status == Domain.BorrowStatus.Requested).Select(
                     book => new BookRequestViewModel
                     {
                         Id = book.Id,
@@ -60,27 +62,45 @@ namespace BookStore.Application.Common.Service
         }
         public async Task ApproveBook(BookApproveViewModel model)
         {
-            var bookApprove = new BookLending()
+            if (GetBorrowStatus(model.Status) == Domain.BorrowStatus.Approved)
             {
-                DueDate = _dateTimeService.Now.AddDays(15),
-                Remarks = $"Book request approved for {await _identityService.GetBorrowerFullName(model.RequesterId) }",
-                IssuedDate = _dateTimeService.Now,
-                BookId = model.BookId,
-                BorrowerId = model.RequesterId,
-                CreatedBy = _currentUserService.UserId,
-                Created = _dateTimeService.Now
-            };
+                var bookApprove = new BookLending()
+                {
+                    DueDate = _dateTimeService.Now.AddDays(15),
+                    Remarks = $"Book request approved for {await _identityService.GetBorrowerFullName(model.RequesterId) }",
+                    IssuedDate = _dateTimeService.Now,
+                    BookId = model.BookId,
+                    BorrowerId = model.RequesterId,
+                    CreatedBy = _currentUserService.UserId,
+                    Created = _dateTimeService.Now
+                };
 
-            await ModifyBookRequest(model.RequestId);
+                await _dbContext.BookLendings.AddAsync(bookApprove);
+                await _dbContext.SaveChangesAsync();
 
-            await _dbContext.BookLendings.AddAsync(bookApprove);
-            await _dbContext.SaveChangesAsync();
+                await SendEmailForApprove(model);
+            }
+            else if (GetBorrowStatus(model.Status) == Domain.BorrowStatus.Rejected)
+                await SendBookNotApproveEmail(model);
+
+
+            await ModifyBookRequest(model.RequestId, model.Status);
+        }
+        public BorrowStatus GetBorrowStatus(string status)
+        {
+            var dict = new Dictionary<string, BorrowStatus> {
+                { "Reject", BorrowStatus.Rejected },
+                { "Approve", BorrowStatus.Approved }
+             };
+            return dict[status];
         }
 
-        public async Task ModifyBookRequest(int requestId)
+        public async Task ModifyBookRequest(int requestId, string status)
         {
-            var bookReservation = await _dbContext.BookReservations.FirstAsync(r => r.Id == requestId);
-            bookReservation.Status = Domain.BorrowStatus.Approved;
+
+
+            var bookReservation = await _dbContext.BookReservations.Where(r => r.Id == requestId).FirstOrDefaultAsync();
+            bookReservation.Status = GetBorrowStatus(status);
 
             await _dbContext.SaveChangesAsync();
         }
@@ -106,12 +126,74 @@ namespace BookStore.Application.Common.Service
             await _emailService.SendEmailForBookApproved(options);
         }
 
+        public async Task SendBookNotApproveEmail(BookApproveViewModel model)
+        {
+            UserEmailOptions options = new UserEmailOptions
+            {
+                ToEmails = new List<string>() { await _identityService.GetUserEmailAsync(model.RequesterId) },
+                PlaceHolders = new List<KeyValuePair<string, string>>()
+                    {
+                        new KeyValuePair<string, string>("{{UserName}}", await _identityService.GetFirstName(model.RequesterId))
+                }
+            };
+
+            await _emailService.SendEmailForBookNotApproved(options);
+        }
+
         public async Task<string> GetExpiryDate(string requesterId, int bookId)
         {
             var bookLend = await _dbContext.BookLendings
                 .FirstAsync(x => x.BookId == bookId && x.BorrowerId.Equals(requesterId));
 
             return bookLend.DueDate.Date.ToShortDateString();
+        }
+
+        public async Task<PaginatedList<BookApproveListViewModel>> GetApprovedBook(int currentpage, int pageSize)
+        {
+            var bookApproveList = await _dbContext.BookLendings
+                              .Include(x => x.Book).Select(
+                              lend => new BookApproveListViewModel
+                              {
+                                  BorrowerId = lend.BorrowerId,
+                                  LendId = lend.Id,
+                                  BookId = lend.Book.Id,
+                                  Author = lend.Book.Author,
+                                  Title = lend.Book.Title,
+                                  DueDate = lend.DueDate,
+                                  IssueDate = lend.IssuedDate
+                              }).PaginatedListAsync(currentpage, pageSize);
+
+            foreach (var y in bookApproveList.Items)
+            {
+                y.Borrower = await _identityService.GetUserEmailAsync(y.BorrowerId);
+            }
+
+            return bookApproveList;
+        }
+        public async Task<PaginatedList<BookApproveListViewModel>> GetApprovedBookForUser(int currentpage, int pageSize)
+        {
+            var bookApproveList = await _dbContext.BookLendings
+                              .Include(x => x.Book).Select(lend => new BookApproveListViewModel
+                              {
+                                  BorrowerId = lend.BorrowerId,
+                                  LendId = lend.Id,
+                                  BookId = lend.Book.Id,
+                                  Author = lend.Book.Author,
+                                  Title = lend.Book.Title,
+                                  DueDate = lend.DueDate,
+                                  IssueDate = lend.IssuedDate
+                              }).ToListAsync();
+
+            foreach (var y in bookApproveList)
+            {
+                y.Borrower = await _identityService.GetUserEmailAsync(y.BorrowerId);
+            }
+
+            var result = bookApproveList
+                .Where(x => x.BorrowerId.Equals(_currentUserService.UserId))
+                .PageList(currentpage, pageSize);
+
+            return result;
         }
     }
 }

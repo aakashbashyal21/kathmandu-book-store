@@ -1,0 +1,77 @@
+﻿@{
+    ViewData["Title"] = "All books";
+}
+@model BookStore.Application.Common.Model.PaginatedList<BookApproveListViewModel>
+
+
+
+
+<div class="card">
+    <div class="card-header bg-success text-white">
+        Approved book
+    </div>
+    <div class="card-body">
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Author</th>
+                    <td>Title</td>
+                    <td>Issue Date</td>
+                    <td>Expire Date</td>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model.Items)
+                {
+                    <tr>
+                        <th scope="row">@item.Author</th>
+                        <td>@item.Title</td>
+                        <td>@item.IssueDate.Date.ToShortDateString()</td>
+                        <td>@item.DueDate.Date.ToShortDateString()</td>
+                    </tr>
+
+                }
+            </tbody>
+
+        </table>
+    </div>
+    <div class="card-footer text-muted">
+        <nav aria-label="Page navigation example">
+            <ul class="pagination justify-content-end">
+                <li class='page-item @(Model.HasPreviousPage ? " " : " disabled" )'>
+                    <a href="javascript:void(0);" onClick="return pageChange(@(Model.PageIndex - 1));"
+                       class="page-link" aria-label="Next">
+                        <span aria-hidden="true">Previous</span>
+                    </a>
+                </li>
+                @for (var i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class='page-item @(i == Model.PageIndex ? " active" : "" )'>
+                        <a href="javascript:void(0);" onClick="return pageChange(@i);" class="page-link">@i</a>
+                    </li>
+                }
+                <li class='page-item @(Model.HasNextPage ? " " : " disabled" )'>
+                    <a href="javascript:void(0);" onClick="return pageChange(@(Model.PageIndex + 1));"
+                       class="page-link" aria-label="Previous">
+                        <span aria-hidden="true">Next</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+<script>
+
+    function pageChange(id) {
+        var container = $("#ApprovedBookList");
+
+
+
+        $.get("/mybook/approvedbook", { currentpage: id }, function (res) {
+            container.html(res);
+        });
+    }
+
+</script>

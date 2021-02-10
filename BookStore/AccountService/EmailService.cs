@@ -121,5 +121,14 @@ namespace BookStoreUI.AccountService
             await SendEmail(userEmailOptions);
 
         }
+
+        public async Task SendEmailForBookNotApproved(UserEmailOptions userEmailOptions)
+        {
+            userEmailOptions.Subject = UpdatePlaceHolders("Hello {{UserName}}, your book has been not approved.", userEmailOptions.PlaceHolders);
+
+            userEmailOptions.Body = UpdatePlaceHolders(GetEmailBody("BookNotApprovedEmail"), userEmailOptions.PlaceHolders);
+
+            await SendEmail(userEmailOptions);
+        }
     }
 }

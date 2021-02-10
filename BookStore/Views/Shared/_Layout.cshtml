@@ -22,6 +22,14 @@
             left: auto !important;
             right: 0px;
         }
+
+        .bg-custom-1 {
+            background-color: #85144b;
+        }
+
+        .bg-custom-2 {
+            background-image: linear-gradient(15deg, #13547a 0%, #80d0c7 100%);
+        }
     </style>
 </head>
 <body>
@@ -67,22 +75,58 @@
 
                 </ul>
                 <ul class="navbar-nav ml-auto">
-
-                    @if (!User.Identity.IsAuthenticated)
+                    @if (User.Identity.IsAuthenticated)
                     {
-                        <li class="nav-item">
-                            <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path">Login</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link" href="#" id="navbarDropdownMenuLink" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img src="~/images/profile.png" width="60" height="60" class="rounded-circle">
+                            </a>
+
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a class="dropdown-item" href="#">@User.Identity.Name</a>
+                                <hr />
+                                @if (User.IsInRole("Reader"))
+                                {
+                                    <a asp-controller="MyBook" asp-action="Index"a class="p-3 dropdown-item">My Book</a>
+
+                                }
+
+                                <a asp-controller="Account" asp-action="Profile" class="p-3 dropdown-item">Profile</a>
+                                <a asp-controller="Account" asp-action="Logout" class="p-3 dropdown-item">Logout</a>
+
+                            </div>
                         </li>
                     }
                     else
                     {
                         <li class="nav-item">
-                            <a asp-controller="Account" asp-action="Profile" class="btn btn-outline-primary">Hello! @User.Identity.Name</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="btn" asp-controller="Account" asp-action="Logout">Logout</a>
+                            <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path">Login</a>
                         </li>
                     }
+
+                    @*@if (User.Identity.IsAuthenticated && User.IsInRole("Reader"))
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login">My Book</a>
+                            </li>
+                        }
+                        @if (!User.Identity.IsAuthenticated)
+                        {
+                            <li class="nav-item">
+                                <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Login" asp-route-returnUrl="@Context.Request.Path">Login</a>
+                            </li>
+
+                        }
+                        else
+                        {
+                            <li class="nav-item">
+                                <a asp-controller="Account" asp-action="Profile" class="btn btn-outline-primary">Hello! @User.Identity.Name</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="btn" asp-controller="Account" asp-action="Logout">Logout</a>
+                            </li>
+                        }*@
+
 
                 </ul>
             </div>

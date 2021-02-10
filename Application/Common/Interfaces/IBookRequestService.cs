@@ -1,5 +1,6 @@
 ﻿using BookStore.Application.Common.Model;
 using BookStore.Application.ViewModel;
+using BookStore.Domain;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,9 +13,15 @@ namespace BookStore.Application.Common.Interfaces
         Task<PaginatedList<BookRequestViewModel>> GetRequestedBookList(int pageNumber, int pageSize);
 
         Task ApproveBook(BookApproveViewModel model);
-        Task ModifyBookRequest(int requestId);
+        //Task DisapproveBook(BookApproveViewModel model);
+
+        Task ModifyBookRequest(int requestId, string status);
         Task SendEmailForApprove(BookApproveViewModel model);
 
         Task<string> GetExpiryDate(string requesterId, int bookId);
+
+        Task<PaginatedList<BookApproveListViewModel>> GetApprovedBook(int currentpage, int pageSize);
+
+        Task<PaginatedList<BookApproveListViewModel>> GetApprovedBookForUser(int currentpage, int pageSize);
     }
 }

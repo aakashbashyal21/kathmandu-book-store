@@ -184,5 +184,12 @@ namespace BookStoreUI.Controllers
             return RedirectToRoute("bookDetailsRoute", new { id = bookId });
         }
 
+        [Route("my-book")]
+        [HttpGet]
+        public async Task<ActionResult> MyBook()
+        {
+            return View();
+        }
+
     }
 }
