@@ -195,7 +195,7 @@ namespace BookStore.Application.Common.Service
 
             return result;
         }
-        public async Task<PaginatedList<BookApproveListViewModel>> GetApprovedBookForUser(int currentpage, int pageSize)
+                public async Task<PaginatedList<BookApproveListViewModel>> GetApprovedBookForUser(int currentpage, int pageSize)
         {
             var bookApproveList = await _dbContext.BookLendings
                               .Include(x => x.Book).Select(lend => new BookApproveListViewModel

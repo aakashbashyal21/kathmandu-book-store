@@ -57,14 +57,14 @@ namespace BookStore.Controllers
             {
                 Subject = "Hi",
                 Body = $"This is the email body from {_env.EnvironmentName}",
-                From = new MailAddress("devawsapp@gmail.com", "BookStoreTeam"),
+                From = new MailAddress("", ""),
                 IsBodyHtml = true
             };
 
             mail.To.Add("aakashbashyal@gmail.com");
 
 
-            NetworkCredential networkCredential = new NetworkCredential("devawsapp@gmail.com", @"Nirv@n@H0use123");
+            NetworkCredential networkCredential = new NetworkCredential("", @"");
 
             SmtpClient smtpClient = new SmtpClient
             {
